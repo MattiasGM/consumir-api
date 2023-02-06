@@ -35,9 +35,13 @@ export default function Alunos() {
             <div key={String(aluno.id)}>
               <ProfilePicture>
                 {get(aluno, 'Fotos[0].url', false) ? (
-                  <img src={aluno.Fotos[0].url} alt="" />
+                  <img
+                    crossOrigin="anonymous"
+                    src={aluno.Fotos[0].url}
+                    alt=""
+                  />
                 ) : (
-                  <FaUserCircle size={36} />
+                  <FaUserCircle size={72} />
                 )}
               </ProfilePicture>
 
@@ -45,11 +49,11 @@ export default function Alunos() {
               <span>{aluno.email}</span>
 
               <Link to={`/aluno/${aluno.id}/edit`}>
-                <FaEdit size={16} />
+                <FaEdit size={22} />
               </Link>
 
               <Link to={`/aluno/${aluno.id}/edit`}>
-                <FaWindowClose size={16} />
+                <FaWindowClose size={22} />
               </Link>
             </div>
           );

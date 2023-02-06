@@ -25,12 +25,19 @@ export default createGlobalStyle`
     background: ${colors.primaryColor};
     border: none;
     color: #fff;
+    padding: 10px 20px;
     border-radius: 4px;
     font-weight: 700;
+    transition: all 0.3ms;
+
+    &:hover {
+      filter: brightness(120%);
+    }
   }
 
   a {
     text-decoration: none;
+    color: ${colors.primaryColor};
   }
 
   ul {
@@ -41,10 +48,13 @@ export default createGlobalStyle`
 `;
 
 export const Container = styled.section`
-  max-width: 480px;
+  max-width: 1000px;
   background: #fff;
   margin: 30px auto;
   padding: 30px;
   border-radius: 4px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-flow: column nowrap;
+  text-align: center;
 `;
