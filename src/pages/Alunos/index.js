@@ -5,22 +5,22 @@ import { FaUserCircle, FaEdit, FaWindowClose } from 'react-icons/fa';
 
 import { Container } from '../../styles/GlobalStyles';
 import { AlunoContainer, ProfilePicture } from './styled';
-// import axios from '../../services/axios';
+import axios from '../../services/axios';
 
 export default function Alunos() {
-  // eslint-disable-next-line no-unused-vars
   const [alunos, setAlunos] = useState([]);
 
   useEffect(() => {
     async function getData() {
-      // const response = await axios.get('/alunos');
-      const response = [
-        { id: 1, nome: 'test1', email: 'asdasdasd@asd.com', Fotos: [] },
-        { id: 2, nome: 'test2', email: 'asdasdasd@asd.com', Fotos: [] },
-      ];
-      // setAlunos(response.data);
+      const response = await axios.get('/alunos');
+      setAlunos(response.data);
 
-      setAlunos(response);
+      // test com API OFF-LINE
+      // const response = [
+      //   { id: 1, nome: 'test1', email: 'asdasdasd@asd.com', Fotos: [] },
+      //   { id: 2, nome: 'test2', email: 'asdasdasd@asd.com', Fotos: [] },
+      // ];
+      // setAlunos(response);
     }
 
     getData();
