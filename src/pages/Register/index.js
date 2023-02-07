@@ -84,7 +84,7 @@ export default function Register() {
           />
         </label>
 
-        <button type="submit"> Criar minha conta</button>
+        <button type="submit">Criar minha conta</button>
       </Form>
     </Container>
   );
