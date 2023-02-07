@@ -30,6 +30,7 @@ function persistRehydrate({ payload }) {
   axios.defaults.headers.Authorization = `Bearer ${token}`;
 }
 
+// eslint-disable-next-line consistent-return
 function* registerRequest({ payload }) {
   const { id, nome, email, password } = payload;
 
@@ -41,11 +42,26 @@ function* registerRequest({ payload }) {
         password: password || undefined,
       });
       toast.success('Conta alterada com sucesso');
-      yield put(actions.registerSucess({ nome, email, password }));
+      yield put(actions.registerUpdatedSucess({ nome, email, password }));
+    } else {
+      yield call(axios.post, '/users', {
+        email,
+        nome,
+        password,
+      });
+      toast.success('Conta criada com sucesso');
+      yield put(actions.registerCreatedSucess({ nome, email, password }));
+      history.push('/login');
     }
   } catch (e) {
     const errors = get(e, 'response.data.error', []);
     const status = get(e, 'response.status', 0);
+
+    if (status === 401) {
+      toast.error('Você precisa fazer login novamente.');
+      yield put(actions.loginFailure());
+      return history.push('/login');
+    }
 
     if (errors.length > 0) {
       errors.map((error) => toast.error(error));
