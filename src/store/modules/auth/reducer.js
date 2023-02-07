@@ -10,9 +10,13 @@ const initialState = {
 // eslint-disable-next-line default-param-last
 export default (state = initialState, action) => {
   switch (action.type) {
-    case types.LOGIN_REQUEST: {
+    case types.LOGIN_SUCESS: {
       console.log('REDUCER', action.payload);
       return state;
+    }
+    case types.LOGIN_FAILURE: {
+      const newState = { ...initialState };
+      return newState;
     }
 
     default: {
