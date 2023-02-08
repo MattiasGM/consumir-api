@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { get } from 'lodash';
-import { FaUserCircle, FaEdit, FaWindowClose } from 'react-icons/fa';
+import {
+  FaUserCircle,
+  FaEdit,
+  FaWindowClose,
+  FaExclamation,
+} from 'react-icons/fa';
 
+import { toast } from 'react-toastify';
 import { Container } from '../../styles/GlobalStyles';
 import { AlunoContainer, ProfilePicture } from './styled';
 import axios from '../../services/axios';
@@ -30,6 +36,36 @@ export default function Alunos() {
 
     getData();
   }, []);
+
+  const handleDeletAsk = (e) => {
+    e.preventDefault();
+    const exclamation = e.currentTarget.nextSibling;
+    exclamation.setAttribute('display', 'block');
+    e.currentTarget.remove();
+  };
+
+  const handleDelet = async (e, id, index) => {
+    e.persist();
+
+    try {
+      setIsLoading(true);
+      await axios.delete(`/alunos/${id}`);
+      const novosAlunos = [...alunos];
+      novosAlunos.splice(index, 1);
+      setAlunos(novosAlunos);
+      setIsLoading(false);
+    } catch (err) {
+      const status = get(err, 'response.status');
+
+      if (status === 401) {
+        toast.error('Você precisa fazer login.');
+      } else {
+        toast.error('Ocorreu um erro ao excluir aluno');
+      }
+      setIsLoading(false);
+    }
+  };
+
   return (
     <Container>
       <Loading isLoading={isLoading} />
@@ -37,7 +73,7 @@ export default function Alunos() {
       <h1>Alunos</h1>
 
       <AlunoContainer>
-        {alunos.map((aluno) => {
+        {alunos.map((aluno, index) => {
           return (
             <div key={String(aluno.id)}>
               <ProfilePicture>
@@ -59,9 +95,16 @@ export default function Alunos() {
                 <FaEdit size={22} />
               </Link>
 
-              <Link to={`/aluno/${aluno.id}/edit`}>
+              <Link onClick={handleDeletAsk} to={`/aluno/${aluno.id}/edit`}>
                 <FaWindowClose size={22} />
               </Link>
+
+              <FaExclamation
+                size={22}
+                display="none"
+                cursor="pointer"
+                onClick={(e) => handleDelet(e, aluno.id, index)}
+              />
             </div>
           );
         })}

@@ -5,6 +5,7 @@ import {
   FaUserAlt,
   FaCircle,
   FaPowerOff,
+  FaExclamation,
 } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
@@ -17,10 +18,16 @@ export default function Header() {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
-  const handleLogout = (e) => {
+  const handleLogoutAsk = (e) => {
     e.preventDefault();
+    const exclamation = e.currentTarget.nextSibling;
+    exclamation.setAttribute('display', 'block');
+    e.target.setAttribute('display', 'none');
+  };
+
+  const handleLogout = () => {
     dispatch(actions.loginFailure());
-    history.push('/');
+    history.push('/login');
   };
 
   return (
@@ -33,9 +40,20 @@ export default function Header() {
       </Link>
 
       {isLoggedIn ? (
-        <Link onClick={handleLogout} to="/login">
-          <FaPowerOff size={24} />
-        </Link>
+        <>
+          <FaPowerOff
+            onClick={handleLogoutAsk}
+            size={24}
+            cursor="pointer"
+            display="block"
+          />
+          <FaExclamation
+            onClick={handleLogout}
+            size={24}
+            cursor="pointer"
+            display="none"
+          />
+        </>
       ) : (
         <Link to="/login">
           <FaSignInAlt size={24} />
