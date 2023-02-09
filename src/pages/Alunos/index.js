@@ -25,13 +25,6 @@ export default function Alunos() {
       const response = await axios.get('/alunos');
       setAlunos(response.data);
       setIsLoading(false);
-
-      // test com API OFF-LINE
-      // const response = [
-      //   { id: 1, nome: 'test1', email: 'asdasdasd@asd.com', Fotos: [] },
-      //   { id: 2, nome: 'test2', email: 'asdasdasd@asd.com', Fotos: [] },
-      // ];
-      // setAlunos(response);
     }
 
     getData();

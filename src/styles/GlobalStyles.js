@@ -57,4 +57,8 @@ export const Container = styled.section`
   display: flex;
   flex-flow: column nowrap;
   text-align: center;
+
+  h1 {
+    font-size: 2.5rem;
+  }
 `;
