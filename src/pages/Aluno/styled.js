@@ -17,7 +17,7 @@ export const Form = styled.form`
     width: 100%;
     display: flex;
     flex-flow: row nowrap;
-    align-items: center;
+    align-items: flex-start;
   }
 
   input {
@@ -27,7 +27,7 @@ export const Form = styled.form`
     border: 1px solid #ddd;
     border-radius: 4px;
     padding: 0 10px;
-    margin: 5px 0;
+    margin: 10px 0;
 
     &:focus {
       border: 1px solid ${colors.primaryColor};
@@ -35,6 +35,7 @@ export const Form = styled.form`
   }
 
   button {
+    margin: 20px 0 0;
     width: 100%;
   }
 
@@ -58,7 +59,5 @@ export const UserCircle = styled(FaUserCircle)`
   @media (max-width: 1000px) {
     width: 128px;
     height: 128px;
-    display: flex;
-    flex-flow: column wrap;
   }
 `;
