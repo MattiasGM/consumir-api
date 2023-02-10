@@ -2,15 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { get } from 'lodash';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
 
+import { FaEdit, FaUserCircle } from 'react-icons/fa';
 import axios from '../../services/axios';
+import history from '../../services/history';
 import formValid from './validate';
 import Loading from '../../components/Loading';
 import { Container } from '../../styles/GlobalStyles';
-import { Form, UserCircle } from './styled';
+import { Form, EditFoto } from './styled';
+import * as actions from '../../store/modules/auth/actions';
 
 export default function Aluno({ match }) {
+  const dispatch = useDispatch();
+
   const id = get(match, 'params.id', 0);
+  const [foto, setFoto] = useState('');
   const [nome, setNome] = useState('');
   const [sobrenome, setSobrenome] = useState('');
   const [email, setEmail] = useState('');
@@ -21,38 +28,108 @@ export default function Aluno({ match }) {
 
   useEffect(() => {
     if (!id) return;
-    const getData = async () => {
+    async function getData() {
       try {
         setIsLoading(true);
-        const { data } = await axios.get(`/alunos/${id}`);
-        const Foto = get(data, 'Fotos[0].url', '');
 
+        const { data } = await axios.get(`/alunos/${id}`);
+
+        setFoto(get(data, 'Fotos[0].url', ''));
         setNome(data.nome);
-        setNome(data.sobrenome);
-        setNome(data.email);
-        setNome(data.idade);
-        setNome(data.peso);
-        setNome(data.altura);
+        setSobrenome(data.sobrenome);
+        setEmail(data.email);
+        setIdade(data.idade);
+        setPeso(data.peso);
+        setAltura(data.altura);
+
         setIsLoading(false);
       } catch (err) {
         setIsLoading(false);
-        const status = get(err, 'response.status', 0);
         const errors = get(err, 'response.data.errors', []);
 
-        if (status === 400) errors.map((error) => toast.error(error));
-        history
+        if (errors.length > 0) errors.map((error) => toast.error(error));
+        history.push('/');
       }
-    };
+    }
 
     getData();
   }, [id]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleChange = async (e) => {
+    const newFoto = e.target.files[0];
+    const newFotoURL = URL.createObjectURL(newFoto);
 
+    const formData = new FormData();
+    formData.append('aluno_id', id);
+    formData.append('foto', newFoto);
+
+    try {
+      setIsLoading(true);
+
+      await axios.post('/fotos/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      setFoto(newFotoURL);
+      toast.success('Foto atualizada');
+
+      setIsLoading(false);
+    } catch (err) {
+      setIsLoading(false);
+
+      const { status } = get(err, 'response', '');
+      toast.error('Error ao enviar foto');
+
+      if (status === 401) dispatch(actions.loginFailure());
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const formErrors = formValid(nome, sobrenome, email, idade, peso, altura);
-    if (!formErrors) {
-      console.log('cheguei');
+    if (formErrors) return;
+
+    try {
+      setIsLoading(true);
+
+      if (id) {
+        // editando aluno
+        await axios.put(`/alunos/${id}`, {
+          nome,
+          sobrenome,
+          email,
+          idade,
+          peso,
+          altura,
+        });
+        toast.success('Aluno(a) editado com sucesso.');
+      } else {
+        // criando novo aluno
+        const { data } = await axios.post(`/alunos/`, {
+          nome,
+          sobrenome,
+          email,
+          idade,
+          peso,
+          altura,
+        });
+        toast.success('Aluno(a) criado com sucesso.');
+        history.push(`/aluno/${data.id}/edit`);
+
+        setIsLoading(false);
+      }
+    } catch (err) {
+      setIsLoading(false);
+      const status = get(err, 'response.status', 0);
+      const errors = get(err, 'response.data.errors', []);
+
+      if (errors.length > 0) {
+        errors.map((error) => toast.error(error));
+      } else toast.error('Erro inesperado.');
+
+      if (status === 401) dispatch(actions.loginFailure());
     }
   };
 
@@ -63,7 +140,24 @@ export default function Aluno({ match }) {
 
       <Form onSubmit={handleSubmit}>
         <div className="btn">
-          <UserCircle />
+          {foto ? (
+            <EditFoto htmlFor="foto">
+              <img crossOrigin="anonymous" src={foto} alt="" />
+              <div className="faEditBackground">
+                <FaEdit className="faEdit" />
+              </div>
+              <input type="file" id="foto" onChange={handleChange} />
+            </EditFoto>
+          ) : (
+            <EditFoto htmlFor="foto">
+              <FaUserCircle className="faUserCircle" />
+              <div className="faEditBackground">
+                <FaEdit className="faEdit" />
+              </div>
+              <input type="file" id="foto" onChange={handleChange} />
+            </EditFoto>
+          )}
+
           <div className="input">
             <input
               type="text"

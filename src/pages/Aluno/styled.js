@@ -1,11 +1,29 @@
 import styled from 'styled-components';
-import { FaUserCircle } from 'react-icons/fa';
 import * as colors from '../../config/colors';
 
 export const Form = styled.form`
   display: flex;
   flex-flow: column nowrap;
-  margin: 50px 0 0;
+  margin: 30px 0 0;
+
+  input {
+    width: 100%;
+    height: 40px;
+    font-size: 1.1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 0 10px;
+    margin: 10px 0;
+
+    :focus {
+      border: 1px solid ${colors.primaryColor};
+    }
+  }
+
+  button {
+    margin: 20px 0 0;
+    width: 100%;
+  }
 
   .input {
     width: 100%;
@@ -20,25 +38,6 @@ export const Form = styled.form`
     align-items: flex-start;
   }
 
-  input {
-    width: 100%;
-    height: 40px;
-    font-size: 1.1rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 0 10px;
-    margin: 10px 0;
-
-    &:focus {
-      border: 1px solid ${colors.primaryColor};
-    }
-  }
-
-  button {
-    margin: 20px 0 0;
-    width: 100%;
-  }
-
   @media (max-width: 1000px) {
     .btn {
       width: 100%;
@@ -49,15 +48,57 @@ export const Form = styled.form`
   }
 `;
 
-export const UserCircle = styled(FaUserCircle)`
-  width: 256px;
-  height: 200px;
-  margin: 0 25px 0 0;
+export const EditFoto = styled.label`
+  display: flex;
+  width: 225px;
   cursor: pointer;
-  filter: brightness(1.5);
+  filter: brightness(1.2);
+  margin: 15px 20px 0 0;
+
+  input {
+    display: none;
+  }
+
+  img {
+    width: 100%;
+    border-radius: 50%;
+  }
+  .faUserCircle {
+    width: 100%;
+    height: 100%;
+    color: rgba(0, 0, 0, 0.9);
+    background: #fff;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.9);
+  }
+
+  .faEdit,
+  .faEditBackground {
+    display: none;
+  }
+
+  :hover {
+    .faEdit {
+      position: absolute;
+      display: block;
+      color: #fff;
+      width: 24px;
+      height: 24px;
+      right: calc(50% - 14px);
+      top: calc(50% - 14px);
+    }
+    .faEditBackground {
+      position: absolute;
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 50%;
+    }
+  }
 
   @media (max-width: 1000px) {
-    width: 128px;
-    height: 128px;
+    width: 175px;
+    margin: 0 0 20px 0;
   }
 `;
