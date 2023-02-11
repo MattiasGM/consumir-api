@@ -56,12 +56,12 @@ export default function Aluno({ match }) {
   }, [id]);
 
   const handleChange = async (e) => {
-    const newFoto = e.target.files[0];
-    const newFotoURL = URL.createObjectURL(newFoto);
+    const newFile = e.target.files[0];
+    const newFileURL = URL.createObjectURL(newFile);
 
     const formData = new FormData();
     formData.append('aluno_id', id);
-    formData.append('foto', newFoto);
+    formData.append('foto', newFile);
 
     try {
       setIsLoading(true);
@@ -72,7 +72,7 @@ export default function Aluno({ match }) {
         },
       });
 
-      setFoto(newFotoURL);
+      setFoto(newFileURL);
       toast.success('Foto atualizada');
 
       setIsLoading(false);
